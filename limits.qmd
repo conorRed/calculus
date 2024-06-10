@@ -1,0 +1,54 @@
+---
+title: "Notes on Limits"
+author: "Conor Redington"
+date: 2024-06-03
+format:
+  html:
+    code-fold: false
+jupyter: julia-1.10
+tags: [mathematics, calculus]
+---
+
+
+A limit is needed to formalise the notion of an _infinite process_. Archimedes approximated shapes
+with methods of exhaustion. In approximating pi, he says, "there is a number that exists in between
+these two constraints if such constraints were reduced ad infinitum".
+
+**Something does not need to be defined at $c$ to discuss its limit.** Cauchy uses$ \frac{sin(x)}{x}$ to
+show this. Using the inequality
+
+$$ 1 \lt \frac{sin(x)}{x} \gt cos(x) $$
+
+As x goes to zero, we see that $\frac{sing(x)}{x} $ approaches 1. A counter-intuitive result.
+
+The intuition of the value of the limit is gained numerically, rather than analytically.
+
+The general intuition that the limit of some function at a poing $c$ is the function evaluated at
+that points $c$ operates of the idea of a continuous function.
+
+
+```{julia}
+using SymPy
+f(x) = (sqrt(x) - 5) / (sqrt(x-16) - 3)
+c = 25
+f(c) # NaN
+hs = [1/10^i for i in 1:8 ] # If this was changed to 10...
+xs = c .+ hs
+ys = f.(xs)
+[xs ys]
+```
+
+Greater and greater granularity hits the limits of floating point representation. Numerical
+approaches are limited or should be acknowledged as limited.
+
+Investigating
+
+$$\lim_{x → \frac{15}{11}}h(x)$$
+
+```{julia}
+h(x) = x^2 + 1  + log(abs(11x - 15))/99
+c = 15/11
+hs = [1/10^i for i in 4:3:16]
+xs = c .+ hs
+[xs h.(xs)]
+```

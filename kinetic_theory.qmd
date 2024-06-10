@@ -1,0 +1,52 @@
+---
+title: "Deriving the Kinetic Theory of Gases"
+author: "Conor Redington"
+date: "5/22/2021"
+format:
+  html:
+    code-fold: false
+jupyter: julia-1.10
+---
+
+## What is the question?
+
+What is the steady state behaviour of a molecular cloud of gase over time? Why does it not
+just collapse to a point?
+
+::: {.column-margin}
+Virial Equation
+$$
+<T> = -\frac{1}{2}
+$$
+:::
+
+## Hydrostatic Equilibrium
+
+If we imagine a tiny cuboid. Newtons laws say that when in equilibrium, such a
+cuboid's net forces are zero. The cuboid is on height $dh$, with area $dA$.
+
+Force on the cuboid from the top is some $P_{top}dA$ and from the bottom, $P_{bot}dA$ and
+its weight is $ρdhdAg$.
+
+The summation of this is zero
+
+$$
+P_{top}dA + P_{bot}dA + ρdhdAg = 0
+$$
+
+$$
+P(h1)dA + ρdhdAg = P(h2)dA
+dP = \rho gdh
+$$
+
+Pressure is a function of height and $dP$ is the change in pressure in a infinitesmial
+section $h2 - h1$. Gravity also changes with height and density changes with pressure.
+
+$$\frac{dP}{dh} = \rho(h)g(h)$$
+
+What information do we have about a cloud of gas? Density. So if we think of some eventual
+sphere that the gas coalesces to we start with its density and step through time to
+establish how it morphs to a ball.
+
+### What are the variables?
+

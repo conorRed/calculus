@@ -1,0 +1,145 @@
+---
+title: "Notes on Derivatives"
+author: "Conor Redington"
+date: 2024-05-30
+format:
+  html:
+    code-fold: false
+jupyter: julia-1.10
+tags: [mathematics, calculus]
+---
+
+
+A tangent actually approximates a curve most accuratel.y
+
+> Intuitively, the tangent line at a point on a graph of a function is the line
+> that “best” approximates the function nearby that point.
+
+Rolling a ball down hill
+
+Say you compiled the following distances travelled $x$ along a big long ramp.
+
+
+```{julia}
+using Plots
+
+ts = [0, 1, 2, 3, 4, 5]
+xs = [0, 1, 4, 9, 16, 25]
+plot(ts, xs)
+```
+
+Average speed is actually the slope of the graph between two points above.
+
+5. A poster is to be designed with 50 in2 of printed type, 4 inch margins on both the
+top and the bottom, and 2 inch margins on each side. Find the dimensions of the
+poster which minimize the amount of paper used. (Be sure to indicate why the
+answer you found is a minimum.)
+
+$50 = (w - 4)(h - 8)$
+
+$A = (\frac{50}{w-4} + 8)w$
+
+```{julia}
+using SymPy
+Area(w) = ((50)/(w-4) + 8 )*w
+plot(Area, 5, 10)
+```
+
+We want to minimise to total area. So at around a width of 9. Subbing this back
+in we get a height of 18.
+
+```{julia}
+using CalculusWithJulia
+f(x) = x^4 - 13x^3 + 56x^2 -92x + 48
+rts = find_zeros(f, -10, 10)
+rts = find_zeros(Area, 5, 10)
+```
+
+6. A highway patrol plane is flying 1 mile above a long, straight road, with constant
+ground speed of 120 m.p.h. Using radar, the pilot detects a car whose distance
+from the plane is 1.5 miles and decreasing at a rate of 136 m.p.h. How fast is the
+car traveling along the highway?
+
+## Graphing
+
+
+Graphing is just one of many ways to think about a function. You could look it
+as some rule or algoritm. You could think of it in terms of properties: its
+degree, whether its continuous, what it does near zero etc. or it can be _visualised_
+graphically.
+
+
+A common paradigm is having `action(function, args...)`. The definiton of this
+`function` can be anonymous `x -> ...`, by name `f(x) = ...`, or using the `do` operator.
+
+```{julia}
+```
+
+## Function Manipulations
+
+A function is now considered a mathematical object, like a number. This allows operations on
+functions.
+
+We define a new function called an **operator**. For example, we might want to define the addition
+of two functions as the additions of each of their outputs.
+
+$$f + g(x) = g(x) + f(x)$$
+
+```{julia}
+import Base: +
+f::Function + g::Function = x -> g(x) + f(x)
+ss = sin + sqrt
+ss(4)
+```
+
+A **composition** is an operation that cannot be done on numbers. Unique to this new mathematical
+object of functions. However, the operation is not symmetrical.
+
+
+```{julia}
+f(x) = x^2
+g(x) = sin(x)
+fg = f ∘ g
+gf = g ∘ f
+plot(fg, -2, 2, label="f∘g")
+plot!(gf, label="g∘f")
+```
+
+### Example: Length of day in Ireland.
+
+If we assume the Earth moves in a circle about the sun and that the longest and shortest day of the
+year are at opposite end of a period. Taking the shortest day of the year as 7h 35m 25s and the
+longest day as 17h 4min. We want to start the sine curve, not around zero but around the average
+daylight hours.
+
+Composition is about breaking up a problem into smaller steps.
+
+The `sin` function models periodic motion. The angle can be scaled by a variable to denote the rate
+of change of the variable. For this model we have the day of the year on the x-axis and its length
+in hours on the y-axis. We should be at the granularity of a day then, so $\frac{2\pi}{365}$.
+
+If we start at Jan 1st, we don't want it to just return 0, so we need to shift the value of the
+angle (in this example by 80 days, not figure out why yet).
+
+
+```{julia}
+up(f, k)       = x -> f(x) + k
+over(f, k)     = x -> f(x - k)
+stretch(f, k)  = x -> k * f(x)
+scale(f, k)    = x -> f(k * x)
+a = 12
+b = ((17 + 4/60) - (7 + 135/60 + 25/60/60)) / 2
+c = 80
+d = 2pi/365
+galway(t) = up(stretch(over(scale(sin, d), c), b), a)(t)
+plot(galway, -20, 385)
+```
+
+An `action` in the paradigm of `action(function, ...)` can be viewed as an operator on that function.
+Come back to 9.1.3.
+
+
+## Related Rates
+
+Something thats useful for problem solving. This is _single variable caculus_ so identify the
+variables first.
